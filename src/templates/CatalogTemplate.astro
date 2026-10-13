@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/organisms/Header.astro';
+import CartBar from '../components/organisms/CartBar.astro';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen flex-col">
+    <Header />
+    <main class="mx-auto w-full max-w-270 flex-1 px-6 py-12">
+      <div class="flex flex-col gap-6">
+        <slot name="intro" />
+        <slot name="filters" />
+      </div>
+      <div class="mt-8 pb-12">
+        <slot />
+      </div>
+    </main>
+    <CartBar />
+  </div>
+</Layout>
+
+<script>
+  import { initCatalog } from '../scripts/catalog';
+  initCatalog();
+</script>

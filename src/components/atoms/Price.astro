@@ -1,0 +1,11 @@
+---
+import { formatPrice } from '../../lib/format';
+
+interface Props {
+  value: number;
+  class?: string;
+}
+const { value, class: className } = Astro.props;
+---
+
+<span class:list={['font-semibold', className]}>{formatPrice(value)}</span>

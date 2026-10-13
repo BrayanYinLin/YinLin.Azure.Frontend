@@ -1,0 +1,14 @@
+---
+import Button from '../atoms/Button.astro';
+import CartSummary from '../molecules/CartSummary.astro';
+---
+
+<div class="sticky bottom-0 border-t border-line bg-surface">
+  <div class="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-6 py-4">
+    <CartSummary />
+    <Button variant="primary" type="button" data-cart-cta disabled>
+      Ver carrito · <span data-cart-items>0</span>
+      <span class="ml-2" data-cart-total>0,00 €</span>
+    </Button>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+---
+import type { Product } from '../../lib/api/types';
+import Price from '../atoms/Price.astro';
+import AddToCartButton from './AddToCartButton.astro';
+
+interface Props {
+  product: Product;
+}
+const { product } = Astro.props;
+---
+
+<li
+  data-product-card
+  data-id={product.id}
+  data-price={product.price}
+  data-category={product.category}
+  class="flex flex-col overflow-hidden rounded-card border border-line bg-surface"
+>
+  {
+    product.image ? (
+      <img src={product.image} alt={product.name} width="400" height="320" loading="lazy" class="aspect-5/4 w-full object-cover" />
+    ) : (
+      <div class="aspect-5/4 w-full bg-line" aria-hidden="true" />
+    )
+  }
+  <div class="flex flex-1 flex-col gap-1 p-4">
+    <h3 class="text-sm text-ink">{product.name}</h3>
+    <Price value={product.price} class="text-xs" />
+  </div>
+  <AddToCartButton productId={product.id} />
+</li>

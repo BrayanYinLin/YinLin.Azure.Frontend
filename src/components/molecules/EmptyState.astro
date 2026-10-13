@@ -1,0 +1,12 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<div role="status" class="rounded-card border border-dashed border-line bg-surface px-6 py-16 text-center">
+  <p class="text-sm font-medium text-ink">{title}</p>
+  {description && <p class="mt-1 text-xs text-muted">{description}</p>}
+</div>

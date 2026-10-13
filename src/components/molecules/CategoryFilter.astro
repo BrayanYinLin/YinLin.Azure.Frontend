@@ -1,0 +1,13 @@
+---
+import Chip from '../atoms/Chip.astro';
+
+interface Props {
+  categories: string[];
+}
+const { categories } = Astro.props;
+---
+
+<div role="group" aria-label="Categorías" class="flex flex-wrap gap-2" data-filter>
+  <Chip value="Todos" active>Todos</Chip>
+  {categories.map((c) => <Chip value={c}>{c}</Chip>)}
+</div>

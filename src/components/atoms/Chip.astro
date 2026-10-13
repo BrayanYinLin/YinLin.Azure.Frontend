@@ -1,0 +1,16 @@
+---
+interface Props {
+  active?: boolean;
+  value: string;
+}
+const { active = false, value } = Astro.props;
+---
+
+<button
+  type="button"
+  data-chip={value}
+  aria-pressed={active}
+  class="rounded-full border border-line bg-surface px-4 py-1.5 text-[11px] text-muted transition-colors cursor-pointer hover:text-ink aria-pressed:border-accent aria-pressed:bg-accent aria-pressed:font-medium aria-pressed:text-white"
+>
+  <slot />
+</button>
