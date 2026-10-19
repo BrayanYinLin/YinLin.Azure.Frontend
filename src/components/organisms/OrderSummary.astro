@@ -1,0 +1,43 @@
+---
+import Icon from '../atoms/Icon.astro';
+---
+
+<aside class="flex flex-col rounded-card border border-line bg-surface p-6">
+  <h2 class="text-sm font-semibold text-ink">Resumen del pedido</h2>
+
+  <ul data-summary-list class="mt-4 flex flex-col gap-4"></ul>
+
+  <dl class="mt-5 flex flex-col gap-3 border-t border-line pt-4 text-xs text-muted">
+    <div class="flex justify-between">
+      <dt>Subtotal</dt>
+      <dd class="text-ink" data-cart-subtotal>0,00 €</dd>
+    </div>
+    <div class="flex justify-between">
+      <dt>Envío</dt>
+      <dd class="font-medium text-accent">Gratis</dd>
+    </div>
+    <div class="flex items-baseline justify-between border-t border-line pt-4">
+      <dt class="text-sm font-medium text-ink">Total</dt>
+      <dd class="text-xl font-medium text-ink" data-cart-total>0,00 €</dd>
+    </div>
+  </dl>
+
+  <div class="mt-4 flex items-center gap-2 rounded-lg bg-accent-soft px-3 py-2.5 text-[11px] text-accent">
+    <Icon name="truck" class="size-3.5" />
+    Tu pedido tiene envío gratuito.
+  </div>
+  <p class="mt-4 text-[11px] text-muted">Impuestos incluidos. Sin costes adicionales.</p>
+
+  <template data-summary-item-template>
+    <li class="flex gap-3">
+      <div class="aspect-5/6 w-14 shrink-0 overflow-hidden rounded-lg bg-line">
+        <img data-item-image hidden alt="" class="size-full object-cover" />
+      </div>
+      <div class="flex flex-col gap-0.5">
+        <p data-item-name class="text-xs font-medium text-ink"></p>
+        <p data-item-qty class="text-[11px] text-muted"></p>
+        <p data-item-price class="text-xs font-semibold text-ink"></p>
+      </div>
+    </li>
+  </template>
+</aside>

@@ -1,0 +1,28 @@
+---
+import Button from '../atoms/Button.astro';
+import FormField from '../molecules/FormField.astro';
+---
+
+<form data-payment-form novalidate class="flex flex-col gap-4 rounded-card border border-line bg-surface p-6">
+  <h2 class="text-sm font-semibold text-ink">Datos de pago</h2>
+
+  <FormField id="fullName" label="Nombre completo" type="text" autocomplete="cc-name" placeholder="Como aparece en la tarjeta" />
+  <FormField
+    id="cardNumber"
+    label="Número de tarjeta"
+    type="text"
+    inputmode="numeric"
+    autocomplete="cc-number"
+    placeholder="0000 0000 0000 0000"
+    maxlength={23}
+  />
+  <div class="grid grid-cols-2 gap-4">
+    <FormField id="expiry" label="Vencimiento" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / AA" maxlength={7} />
+    <FormField id="cvv" label="CVV" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength={4} />
+  </div>
+  <FormField id="email" label="Email para el recibo" type="email" autocomplete="email" placeholder="nombre@correo.com" />
+
+  <p data-form-status role="status" class="rounded-lg bg-accent-soft px-4 py-3 text-[11px] text-accent" hidden></p>
+
+  <Button variant="primary" type="submit" class="w-full py-3.5" data-pay disabled>Pagar</Button>
+</form>

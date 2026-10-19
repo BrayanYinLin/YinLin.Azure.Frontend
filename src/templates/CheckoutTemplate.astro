@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/organisms/Header.astro';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen flex-col">
+    <Header />
+    <main class="mx-auto w-full max-w-270 flex-1 px-6 py-12">
+      <slot name="intro" />
+      <div class="mt-8 pb-12">
+        <slot />
+      </div>
+    </main>
+  </div>
+</Layout>
+
+<script>
+  import { initCheckout } from '../scripts/checkout';
+  initCheckout();
+</script>

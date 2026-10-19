@@ -1,0 +1,63 @@
+---
+import CheckoutTemplate from "../templates/CheckoutTemplate.astro";
+import PageIntro from "../components/molecules/PageIntro.astro";
+import EmptyState from "../components/molecules/EmptyState.astro";
+import PaymentForm from "../components/organisms/PaymentForm.astro";
+import OrderSummary from "../components/organisms/OrderSummary.astro";
+import { getProducts } from "../lib/api/products";
+import type { Product } from "../lib/api/types";
+
+export const prerender = false;
+
+// Igual que en /carrito: el servidor entrega el catálogo y el cliente lo cruza
+// con los ids y cantidades guardados en localStorage.
+let products: Product[] = [];
+let failed = false;
+try {
+  products = await getProducts();
+} catch (error) {
+  console.error("[checkout] Error al obtener productos:", error);
+  failed = true;
+  Astro.response.status = 502;
+}
+
+const catalogJson = JSON.stringify(products).replace(/</g, "\\u003c");
+---
+
+<CheckoutTemplate title="objeto. — Pago seguro">
+  <div slot="intro" data-checkout-intro>
+    <PageIntro title="Pago seguro" subtitle="Completa tus datos para finalizar tu pedido." />
+  </div>
+
+  {
+    failed ? (
+      <EmptyState
+        title="No pudimos preparar tu pedido"
+        description="Inténtalo de nuevo en unos minutos."
+      />
+    ) : (
+      <div data-checkout-root>
+        <script is:inline type="application/json" id="catalog-data" set:html={catalogJson} />
+
+        <div data-checkout-empty hidden>
+          <EmptyState
+            title="No hay nada que pagar"
+            description="Tu carrito está vacío."
+          />
+          <p class="mt-4 text-center text-xs">
+            <a href="/" class="text-accent underline underline-offset-4">
+              Volver al catálogo
+            </a>
+          </p>
+        </div>
+
+        <div data-checkout-filled hidden>
+          <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+            <PaymentForm />
+            <OrderSummary />
+          </div>
+        </div>
+      </div>
+    )
+  }
+</CheckoutTemplate>

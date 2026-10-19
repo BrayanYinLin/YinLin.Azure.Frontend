@@ -10,12 +10,12 @@ const { productId } = Astro.props;
 <button
   type="button"
   data-add={productId}
-  class="group flex w-full items-center justify-center border-t border-line bg-surface py-3 text-[11px] font-medium text-accent transition-colors cursor-pointer hover:bg-accent-soft data-[qty]:bg-accent-soft"
+  class="group flex w-full items-center justify-center border-t border-line bg-surface py-3 text-[11px] font-medium text-accent transition-colors cursor-pointer hover:bg-accent-soft data-qty:bg-accent-soft"
 >
-  <span class="flex items-center gap-2 group-data-[qty]:hidden">
+  <span class="flex items-center gap-2 group-data-qty:hidden">
     <Icon name="plus" /> Agregar
   </span>
-  <span class="hidden items-center gap-2 group-data-[qty]:flex">
+  <span class="hidden items-center gap-2 group-data-qty:flex">
     <Icon name="check" /> <span>Añadido · <span data-qty-label></span></span>
   </span>
 </button>

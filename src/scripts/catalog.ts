@@ -1,7 +1,8 @@
 import { formatPrice } from '../lib/format';
+import { loadCart, saveCart, onExternalChange, type Cart } from './cart-store';
 
 export function initCatalog() {
-  const cart = new Map<string, number>();
+  let cart: Cart = loadCart();
   const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-product-card]'));
   const chips = Array.from(document.querySelectorAll<HTMLElement>('[data-chip]'));
 
@@ -41,9 +42,14 @@ export function initCatalog() {
     card.querySelector('[data-add]')!.addEventListener('click', () => {
       const id = card.dataset.id!;
       cart.set(id, (cart.get(id) ?? 0) + 1);
+      saveCart(cart);
       render();
     });
   }
+
+  $('[data-cart-cta]').addEventListener('click', () => {
+    window.location.href = '/carrito';
+  });
 
   // Filtro por categoría
   for (const chip of chips) {
@@ -56,5 +62,25 @@ export function initCatalog() {
     });
   }
 
+  // Descarta productos guardados que ya no existen en el catálogo
+  const pruneUnknown = () => {
+    let changed = false;
+    for (const id of cart.keys()) {
+      if (!prices.has(id)) {
+        cart.delete(id);
+        changed = true;
+      }
+    }
+    if (changed) saveCart(cart);
+  };
+
+  // Mantiene sincronizadas varias pestañas abiertas
+  onExternalChange(() => {
+    cart = loadCart();
+    pruneUnknown();
+    render();
+  });
+
+  pruneUnknown();
   render();
 }

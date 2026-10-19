@@ -1,10 +1,10 @@
 ---
-import CatalogTemplate from '../templates/CatalogTemplate.astro';
-import PageIntro from '../components/molecules/PageIntro.astro';
-import CategoryFilter from '../components/molecules/CategoryFilter.astro';
-import ProductGrid from '../components/organisms/ProductGrid.astro';
-import { getProducts, getCategories } from '../lib/api/products';
-import type { Product } from '../lib/api/types';
+import CatalogTemplate from "../templates/CatalogTemplate.astro";
+import PageIntro from "../components/molecules/PageIntro.astro";
+import CategoryFilter from "../components/molecules/CategoryFilter.astro";
+import ProductGrid from "../components/organisms/ProductGrid.astro";
+import { getCategories, getProducts } from "../lib/api/products";
+import type { Product } from "../lib/api/types";
 
 export const prerender = false;
 
@@ -13,7 +13,7 @@ let failed = false;
 try {
   products = await getProducts();
 } catch (error) {
-  console.error('[catalog] Error al obtener productos:', error);
+  console.error("[catalog] Error al obtener productos:", error);
   failed = true;
   Astro.response.status = 502;
 }
@@ -21,7 +21,15 @@ const categories = getCategories(products);
 ---
 
 <CatalogTemplate title="objeto. — Catálogo">
-  <PageIntro slot="intro" title="Lo simple, bien hecho." subtitle="Esenciales que te acompañan cada día." />
-  {categories.length > 0 && <CategoryFilter slot="filters" categories={categories} />}
+  <PageIntro
+    slot="intro"
+    title="Lo simple, bien hecho."
+    subtitle="Esenciales que te acompañan cada día."
+  />
+  {
+    categories.length > 0 && (
+      <CategoryFilter slot="filters" categories={categories} />
+    )
+  }
   <ProductGrid products={products} failed={failed} />
 </CatalogTemplate>

@@ -10,7 +10,7 @@ const toProduct = (dto: ProductDto): Product => ({
 });
 
 export async function getProducts(): Promise<Product[]> {
-  const dtos = await apiGet<ProductDto[]>('/api/products');
+  const dtos = await apiGet<ProductDto[]>('/api/GetProducts');
   return dtos.map(toProduct);
 }
 

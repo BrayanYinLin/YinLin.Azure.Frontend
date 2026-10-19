@@ -1,0 +1,119 @@
+---
+import CartTemplate from "../templates/CartTemplate.astro";
+import PageIntro from "../components/molecules/PageIntro.astro";
+import EmptyState from "../components/molecules/EmptyState.astro";
+import Icon from "../components/atoms/Icon.astro";
+import { getProducts } from "../lib/api/products";
+import type { Product } from "../lib/api/types";
+
+export const prerender = false;
+
+// El carrito vive en localStorage (solo ids y cantidades), así que el servidor
+// entrega el catálogo y el script cliente lo cruza con los ids guardados.
+let products: Product[] = [];
+let failed = false;
+try {
+  products = await getProducts();
+} catch (error) {
+  console.error("[cart] Error al obtener productos:", error);
+  failed = true;
+  Astro.response.status = 502;
+}
+
+// Evita que un "</script>" dentro de un nombre cierre la etiqueta del JSON.
+const catalogJson = JSON.stringify(products).replace(/</g, "\\u003c");
+---
+
+<CartTemplate title="objeto. — Tu carrito">
+  <div slot="intro" data-cart-intro>
+    <PageIntro title="Tu carrito" subtitle="Revisa tus artículos antes de pagar." />
+  </div>
+
+  {
+    failed ? (
+      <EmptyState
+        title="No pudimos cargar tu carrito"
+        description="Inténtalo de nuevo en unos minutos."
+      />
+    ) : (
+      <div data-cart-root>
+        <script is:inline type="application/json" id="catalog-data" set:html={catalogJson} />
+
+        <div data-cart-empty hidden>
+          <EmptyState
+            title="Tu carrito está vacío"
+            description="Añade productos desde el catálogo."
+          />
+          <p class="mt-4 text-center text-xs">
+            <a href="/" class="text-accent underline underline-offset-4">
+              Volver al catálogo
+            </a>
+          </p>
+        </div>
+
+        <div data-cart-filled hidden>
+          <ul data-cart-list class="flex flex-col" />
+
+          <div class="mt-6 flex items-center gap-2 rounded-lg bg-accent-soft px-4 py-3 text-[11px] text-accent">
+            <Icon name="truck" class="size-3.5" />
+            Tu pedido tiene envío gratuito.
+          </div>
+
+          <dl class="mt-6 flex flex-col gap-2 text-xs text-muted">
+            <div class="flex justify-between">
+              <dt>Subtotal</dt>
+              <dd class="text-ink" data-cart-subtotal>0,00 €</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Envío</dt>
+              <dd class="text-accent">Gratis</dd>
+            </div>
+            <div class="mt-1 flex items-baseline justify-between border-t border-line pt-3">
+              <dt class="text-sm font-medium text-ink">Total</dt>
+              <dd class="text-2xl font-medium text-ink" data-cart-total>0,00 €</dd>
+            </div>
+          </dl>
+        </div>
+
+        <template data-cart-item-template>
+          <li class="flex gap-4 border-b border-line py-5">
+            <div class="aspect-5/6 w-20 shrink-0 overflow-hidden rounded-card bg-line">
+              <img data-item-image hidden alt="" class="size-full object-cover" />
+            </div>
+            <div class="flex flex-1 flex-col items-start gap-1">
+              <h2 data-item-name class="text-sm font-medium text-ink" />
+              <p data-item-price class="text-xs font-semibold text-ink" />
+              <div class="mt-1 inline-flex items-center rounded-lg border border-line bg-surface text-xs">
+                <button
+                  type="button"
+                  data-dec
+                  aria-label="Disminuir cantidad"
+                  class="flex size-7 cursor-pointer items-center justify-center text-muted hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Icon name="minus" />
+                </button>
+                <span data-qty class="min-w-6 text-center" aria-live="polite" />
+                <button
+                  type="button"
+                  data-inc
+                  aria-label="Aumentar cantidad"
+                  class="flex size-7 cursor-pointer items-center justify-center text-muted hover:text-ink"
+                >
+                  <Icon name="plus" />
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              data-remove
+              aria-label="Quitar del carrito"
+              class="flex size-6 cursor-pointer items-center justify-center self-start text-muted hover:text-ink"
+            >
+              <Icon name="close" />
+            </button>
+          </li>
+        </template>
+      </div>
+    )
+  }
+</CartTemplate>
