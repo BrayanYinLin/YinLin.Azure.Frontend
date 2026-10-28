@@ -41,13 +41,18 @@ jobs:
 
       - name: "npm install, build, and test"
         run: |
-          npm install
+          npm ci
           npm run build --if-present
 
-      - name: Check current directory
+      - name: Prepare release package
         run: |
-          pwd
-          ls -la
+          mkdir -p release-package
+          cp -r dist release-package/
+          cp package.json package-lock.json release-package/
+          cp -r node_modules release-package/
+
+      - name: Verify devalue dependency
+        run: npm ls devalue && ls -la release-package/node_modules/devalue
 
       # Deploy web app by using Azure credentials
       - uses: azure/webapps-deploy@v3
