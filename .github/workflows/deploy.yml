@@ -52,7 +52,7 @@ jobs:
         run: |
           mkdir -p release-package
           cp -r dist release-package/
-          cp package.json package-lock.json release-package/
+          cp package.json pnpm-lock.yaml release-package/
           cp -r node_modules release-package/
 
       - name: Verify devalue dependency
