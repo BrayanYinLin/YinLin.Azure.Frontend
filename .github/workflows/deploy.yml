@@ -48,6 +48,13 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build --if-present
 
+      - name: Verify production dependencies
+        working-directory: release-package
+        run: |
+          pnpm list devalue --prod
+          node -e "import('devalue').then(() => console.log('devalue OK')).catch(e => { console.error(e); process.exit(1) })"
+          ls -la dist/server
+
       - name: Prepare release package
         run: |
           mkdir -p release-package
